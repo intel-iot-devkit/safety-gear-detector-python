@@ -1,0 +1,12 @@
+{
+  "name": "Safety Gear Detector",
+  "category": "Reference Implementations",
+  "description": "The application uses the Inference Engine included in Intel® Distribution of OpenVINO™ toolkit. A trained neural network detects people within a designated area. The application checks if each detected person is wearing a safety-jacket and hard-hat. If they are not, a red bounding box is drawn over the person in the video. If they are wearing their designated safety gear, a green bounding box is drawn over them in the video.\nAttention: This sample has additional setup requirements that must be followed prior to launch. Please follow the sample's readme!",
+  "author": "Intel Corporation",
+  "date": "2019-02-25",
+  "sample_readme_uri": "https://github.com/intel-iot-devkit/safety-gear-detector-python/blob/$BRANCHNAME/README.md",
+  "categories": [
+    "Code Samples/Reference Implementations"
+  ],
+  "dependencies":["openvino"]
+}

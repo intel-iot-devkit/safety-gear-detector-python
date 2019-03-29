@@ -1,0 +1,8 @@
+{
+  "main": "safety-gear-python.py",
+  "projectOptions": [
+     {
+       "projectType": "python"
+     }
+  ]
+}
