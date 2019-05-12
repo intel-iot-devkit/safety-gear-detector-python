@@ -30,7 +30,7 @@ from openvino.inference_engine import IENetwork, IEPlugin
 
 class Network:
     """
-    Load and configure inference plugins for the specified target devices
+    Load and configure inference plugins for the specified target devices 
     and performs synchronous and asynchronous modes for the specified infer requests.
     """
 
@@ -42,7 +42,7 @@ class Network:
         self.net_plugin = None
         self.infer_request_handle = None
 
-    def load_model(self, model, device, input_size, output_size, num_requests, cpu_extension=None):
+    def load_model(self, model, device, input_size, output_size, num_requests, cpu_extension=None, plugin=None):
         """
          Loads a network and an image to the Inference Engine plugin.
         :param model: .xml file of pre trained model
@@ -51,6 +51,7 @@ class Network:
         :param input_size: Number of input layers
         :param output_size: Number of output layers
         :param num_requests: Index of Infer request value. Limited to device capabilities.
+        :param plugin: Plugin for specified device
         :return:  Shape of input layer
         """
 
@@ -58,8 +59,12 @@ class Network:
         model_bin = os.path.splitext(model_xml)[0] + ".bin"
         # Plugin initialization for specified device
         # and load extensions library if specified
-        log.info("Initializing plugin for {} device...".format(device))
-        self.plugin = IEPlugin(device=device)
+        if not plugin:
+            log.info("Initializing plugin for {} device...".format(device))
+            self.plugin = IEPlugin(device=device)
+        else:
+            self.plugin = plugin
+
         if cpu_extension and 'CPU' in device:
             self.plugin.add_cpu_extension(cpu_extension)
 
@@ -90,12 +95,12 @@ class Network:
 
         self.input_blob = next(iter(self.net.inputs))
         self.out_blob = next(iter(self.net.outputs))
-        assert len(self.net.inputs.keys()) == input_size,\
+        assert len(self.net.inputs.keys()) == input_size, \
             "Supports only {} input topologies".format(len(self.net.inputs))
         assert len(self.net.outputs) == output_size, \
             "Supports only {} output topologies".format(len(self.net.outputs))
 
-        return self.get_input_shape()
+        return self.plugin, self.get_input_shape()
 
     def get_input_shape(self):
         """
@@ -109,7 +114,7 @@ class Network:
         Queries performance measures per layer to get feedback of what is the
         most time consuming layer.
         :param request_id: Index of Infer request value. Limited to device capabilities
-        :return: Performance of the layer
+        :return: Performance of the layer  
         """
         perf_count = self.net_plugin.requests[request_id].get_perf_counts()
         return perf_count
