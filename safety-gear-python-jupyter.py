@@ -43,7 +43,7 @@ conf_inFrameViolationsThreshold = 15
 conf_inFramePeopleThreshold = 5
 padding = 0.05
 viol_wk = 0
-acceptedDevices = ['CPU', 'GPU', 'MYRIAD', 'HETERO:FPGA,CPU']
+acceptedDevices = ['CPU', 'GPU', 'MYRIAD', 'HETERO:FPGA,CPU', 'HETERO:HDDL,CPU']
 videos = []
 name_of_videos = []
 
@@ -235,7 +235,7 @@ def main():
     # Load the network to IE plugin to get shape of input layer
     batch_size, channels, model_height, model_width = \
         infer_network.load_model(conf_modelLayers, targetDevice, 1, 1, 2,
-                                 cpu_extension)
+                                 cpu_extension)[1]
 
     while True:
         for index, currVideo in videos:

@@ -44,7 +44,7 @@ conf_inFrameViolationsThreshold = 15
 conf_inFramePeopleThreshold = 5
 padding = 0.05
 viol_wk = 0
-acceptedDevices = ['CPU', 'GPU', 'MYRIAD', 'HETERO:FPGA,CPU']
+acceptedDevices = ['CPU', 'GPU', 'MYRIAD', 'HETERO:FPGA,CPU', 'HETERO:HDDL,CPU']
 videos = []
 name_of_videos = []
 
@@ -89,7 +89,7 @@ def get_args():
     parser = ArgumentParser()
     parser.add_argument("-d", "--device",
                         help="Specify the target device to infer on; CPU, GPU,"
-                             "FPGA or MYRIAD is acceptable. Application will"
+                             "FPGA, MYRIAD or HDDL is acceptable. Application will"
                              "look for a suitable plugin for device specified"
                              " (CPU by default)",
                         type=str, required=False)
@@ -249,7 +249,7 @@ def main():
     infer_network = Network()
     # Load the network to IE plugin to get shape of input layer
     batch_size, channels, model_height, model_width = \
-        infer_network.load_model(conf_modelLayers, targetDevice, 1, 1, 2, cpu_extension)
+        infer_network.load_model(conf_modelLayers, targetDevice, 1, 1, 2, cpu_extension)[1]
 
     while True:
         for index, currVideo in videos:

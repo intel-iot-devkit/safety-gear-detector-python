@@ -34,7 +34,7 @@ A trained neural network detects people within a designated area. The applicatio
    uname -a
    ```
 * OpenCL™ Runtime Package
-* Intel® Distribution of OpenVINO™ toolkit R5 release
+* Intel® Distribution of OpenVINO™ toolkit 2019 R1 release
 
 ## Setup
 
@@ -54,15 +54,36 @@ sudo apt install ffmpeg
 ```
 sudo apt install python3-pip
 
-pip3 install numpy
+sudo pip3 install numpy
 
-pip3 install jupyter
+sudo pip3 install jupyter
 ```
 
 ## Configure the Application
 
 ### Which Model to Use
-The application uses the **person-detection-retail-0013** Intel® model, found in the `deployment_tools/intel_models` folder of the toolkit installation.
+By default, this application uses the **person-detection-retail-0013** Intel® model, that can be accessed using the **model downloader**. The **model downloader** downloads the __.xml__ and __.bin__ files that will be used by the application.
+
+#### Download the __.xml__ and __.bin__ files
+
+Go to the **model downloader** directory present inside Intel® Distribution of OpenVINO™ toolkit.
+
+  ```
+  cd /opt/intel/openvino/deployment_tools/tools/model_downloader
+  ```
+
+- Specify which model to download with `--name`.<br><br>
+
+- To optimize the model for FP32, run the following commands:
+
+  ```
+  sudo ./downloader.py --name person-detection-retail-0013
+  ```
+- To optimize the model for FP16, run the following command:
+   ```
+   sudo ./downloader.py --name person-detection-retail-0013-fp16
+   ```
+The files will be downloaded inside the Retail/object_detection/pedestrian/rmnet_ssd/0013/dldt directory.  
    
 ### The Config File
 The _resources/conf.txt_ contains the videos that will be used by the application, one video per line.   
@@ -99,7 +120,7 @@ For example, if the output of above command is `/dev/video0`, then conf.txt woul
 
 Open the terminal to setup the environment variables required to run the Intel® Distribution of OpenVINO™ toolkit applications:
 ```
-source /opt/intel/computer_vision_sdk/bin/setupvars.sh -pyver 3.5
+source /opt/intel/openvino/bin/setupvars.sh -pyver 3.5
 ```
 **Note:** This command only needs to be executed once in the terminal where the application will be executed. If the terminal is closed, the command needs to be executed again.   
 
@@ -107,13 +128,31 @@ source /opt/intel/computer_vision_sdk/bin/setupvars.sh -pyver 3.5
 ## Run the Code on Jupyter*
 
 *  Change the current directory to the git-cloned application code location on your system:
-```
+    ```
     cd <path_to_the_safety-gear-detector-python_directory>
-```
-* To open the Jupyter notebook, run the following command:
-```
+    ```
+
+    **Note:**<br>
+    Before running the application on the FPGA, program the AOCX (bitstream) file. Use the setup_env.sh script from [fpga_support_files.tgz](http://registrationcenter-download.intel.com/akdlm/irc_nas/12954/fpga_support_files.tgz) to set the environment variables.<br>
+    For example:
+
+    ```
+    source /home/<user>/Downloads/fpga_support_files/setup_env.sh
+    ```
+
+    The bitstreams for HDDL-F can be found under the `/opt/intel/openvino/bitstreams/a10_vision_design_bitstreams` folder.<br>To program the bitstream use the below command:<br>
+    ```
+    aocl program acl0 /opt/intel/openvino/bitstreams/a10_vision_design_bitstreams/2019R1_PL1_FP11_RMNet.aocx
+    ```
+
+    For more information on programming the bitstreams, please refer to https://software.intel.com/en-us/articles/OpenVINO-Install-Linux-FPGA#inpage-nav-11
+    <br>
+
+* Open the jupyter notebook:
+
+    ```
     jupyter notebook
-```
+    ```
 
 #### Follow the steps to run the code on Jupyter:
 
@@ -126,9 +165,9 @@ source /opt/intel/computer_vision_sdk/bin/setupvars.sh -pyver 3.5
 3. In the first cell type **import os** and press **Shift+Enter** from the keyboard.
 
 4. Export the environment variables in second cell of Jupyter and press **Shift+Enter**.<br>
-   %env MODEL = /opt/intel/computer_vision_sdk/deployment_tools/intel_models/person-detection-retail-0013/FP32/person-detection-retail-0013.xml <br>
+   %env MODEL = /opt/intel/openvino/deployment_tools/tools/model_downloader/Retail/object_detection/pedestrian/rmnet_ssd/0013/dldt/person-detection-retail-0013.xml <br>
    %env CONFIG = resources/conf.txt <br>
-   %env CPU_EXTENSION = /opt/intel/computer_vision_sdk/deployment_tools/inference_engine/lib/ubuntu_16.04/intel64/libcpu_extension_avx2.so <br>
+   %env CPU_EXTENSION = /opt/intel/openvino/deployment_tools/inference_engine/lib/intel64/libcpu_extension_avx2.so <br>
     
 5. User can set target device to infer on (DEVICE),
    export the environment variable as given below if required. If user skips this step, these values are set to default values. For example: <br>
@@ -149,15 +188,28 @@ source /opt/intel/computer_vision_sdk/bin/setupvars.sh -pyver 3.5
 **NOTE:**
 
 1. To run the application on **GPU**:
-     * Change the **%env DEVICE = CPU** to **%env DEVICE = GPU**.
-     * With the floating point precision 16 (FP16), change the path of the model in the environment variable MODEL as given below:<br>
-       **%env MODEL=/opt/intel/computer_vision_sdk/deployment_tools/intel_models/person-detection-retail-0013/FP16/person-detection-retail-0013.xml** <br>
+     * With the floating point precision 32 (FP32), change the **%env DEVICE = CPU** to **%env DEVICE = GPU**.
+     * With the floating point precision 16 (FP16), change the environment variables as given below:<br>
+       ```
+       %env DEVICE = GPU
+       %env MODEL=/opt/intel/openvino/deployment_tools/tools/model_downloader/Retail/object_detection/pedestrian/rmnet_ssd/0013/dldt/person-detection-retail-0013-fp16.xml 
+       ```
      * **CPU_EXTENSION** environment variable is not required.
    
 2. To run the application on **Intel® Neural Compute Stick**: 
       * Change the **%env DEVICE = CPU** to **%env DEVICE = MYRIAD**.  
       * The Intel® Neural Compute Stick can only run FP16 models. Hence change the environment variable for the model as shown below.<br> 
-      **%env MODEL=/opt/intel/computer_vision_sdk/deployment_tools/intel_models/person-detection-retail-0013/FP16/person-detection-retail-0013.xml** <br>
+      **%env MODEL=/opt/intel/openvino/deployment_tools/tools/model_downloader/Retail/object_detection/pedestrian/rmnet_ssd/0013/dldt/person-detection-retail-0013-fp16.xml** <br>
       * **CPU_EXTENSION** environment variable is not required.
 
+3. To run the application on **HDDL**:
+    - Change the **%env DEVICE = CPU** to **%env DEVICE = HETERO:HDDL,CPU**.
+    - The HDDL can only run FP16 models. Change the environment variable for the model as shown below  and the model that is passed to the application must be of data type FP16. <br>
+    **%env MODEL=/opt/intel/openvino/deployment_tools/tools/model_downloader/Retail/object_detection/pedestrian/rmnet_ssd/0013/dldt/person-detection-retail-0013-fp16.xml** <br>
+   - **%env CPU_EXTENSION=/opt/intel/openvino/deployment_tools/inference_engine/lib/intel64/libcpu_extension_avx2.so<br>**
+4. To run the application on **FPGA**:
+    - Change the **%env DEVICE = CPU** to **%env DEVICE = HETERO:FPGA,CPU**.
+    - With the floating point precision 16 (FP16), change the path of the model in the environment variable MODEL as given below:<br>
+    **%env MODEL=/opt/intel/openvino/deployment_tools/tools/model_downloader/Retail/object_detection/pedestrian/rmnet_ssd/0013/dldt/person-detection-retail-0013-fp16.xml** <br>
+   - **%env CPU_EXTENSION=/opt/intel/openvino/deployment_tools/inference_engine/lib/intel64/libcpu_extension_avx2.so<br>**
 
