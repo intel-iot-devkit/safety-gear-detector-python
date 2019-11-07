@@ -29,7 +29,7 @@ This reference implementation is capable of detecting people passing in front of
 
 - OpenCL™ Runtime Package
 
-- Intel® Distribution of OpenVINO™ toolkit 2019 R2 Release
+- Intel® Distribution of OpenVINO™ toolkit 2019 R3 Release
 
 ## How It Works
 The application uses the Inference Engine included in the Intel® Distribution of OpenVINO™ toolkit.
@@ -73,7 +73,7 @@ FFmpeg is a free and open-source project capable of recording, converting and st
 
 ## Which model to use
 
-This application uses the [person-detection-retail-0013](https://docs.openvinotoolkit.org/2019_R2/_intel_models_person_detection_retail_0013_description_person_detection_retail_0013.html) Intel® model, that can be downloaded using the **model downloader**. The **model downloader** downloads the __.xml__ and __.bin__ files that will be used by the application.
+This application uses the [person-detection-retail-0013](https://docs.openvinotoolkit.org/2019_R3/_models_intel_person_detection_retail_0013_description_person_detection_retail_0013.html) Intel® model, that can be downloaded using the **model downloader**. The **model downloader** downloads the __.xml__ and __.bin__ files that will be used by the application.
 
 The application also uses the **worker_safety_mobilenet** model, whose Caffe* model file are provided in the `resources/worker-safety-mobilenet` directory. These need to be passed through the model optimizer to generate the IR (the .xml and .bin files) that will be used by the application.
 
@@ -158,28 +158,42 @@ __Note__: This command needs to be executed only once in the terminal where the 
     ```
     cd <path_to_the_safety-gear-detector-cpp-with-worker-safety-model_directory>/Jupyter
     ```
-<!-- 
-    **Note:**<br>
-    Before running the application on the FPGA, program the AOCX (bitstream) file. Use the setup_env.sh script from [fpga_support_files.tgz](http://registrationcenter-download.intel.com/akdlm/irc_nas/12954/fpga_support_files.tgz) to set the environment variables.<br>
-    For example:
-
-    ```
-    source /home/<user>/Downloads/fpga_support_files/setup_env.sh
-    ```
-
-    The bitstreams for HDDL-F can be found under the `/opt/intel/openvino/bitstreams/a10_vision_design_bitstreams` folder.<br>To program the bitstream use the below command:<br>
-    ```
-    aocl program acl0 /opt/intel/openvino/bitstreams/a10_vision_design_bitstreams/2019R1_PL1_FP11_RMNet.aocx
-    ```
-
-    For more information on programming the bitstreams, please refer to https://software.intel.com/en-us/articles/OpenVINO-Install-Linux-FPGA#inpage-nav-11
-    <br> -->
 
 * Open the jupyter notebook:
 
     ```
     jupyter notebook
     ```
+    **Note:** Before running the application on the FPGA, set the environment variables and  program the AOCX (bitstream) file.<br>
+
+    Set the Board Environment Variable to the proper directory:
+
+    ```
+    export AOCL_BOARD_PACKAGE_ROOT=/opt/intel/openvino/bitstreams/a10_vision_design_sg<#>_bitstreams/BSP/a10_1150_sg<#>
+    ```
+    **NOTE**: If you do not know which version of the board you have, please refer to the product label on the fan cover side or by the product SKU: Mustang-F100-A10-R10 => SG1; Mustang-F100-A10E-R10 => SG2 <br>
+
+    Set the Board Environment Variable to the proper directory:
+    ```
+    export QUARTUS_ROOTDIR=/home/<user>/intelFPGA/18.1/qprogrammer
+    ```
+    Set the remaining environment variables:
+    ```
+    export PATH=$PATH:/opt/altera/aocl-pro-rte/aclrte-linux64/bin:/opt/altera/aocl-pro-rte/aclrte-linux64/host/linux64/bin:/home/<user>/intelFPGA/18.1/qprogrammer/bin
+    export INTELFPGAOCLSDKROOT=/opt/altera/aocl-pro-rte/aclrte-linux64
+    export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$AOCL_BOARD_PACKAGE_ROOT/linux64/lib
+    export CL_CONTEXT_COMPILER_MODE_INTELFPGA=3
+    source /opt/altera/aocl-pro-rte/aclrte-linux64/init_opencl.sh
+    ```
+    **NOTE**: It is recommended to create your own script for your system to aid in setting up these environment variables. It will be run each time you need a new terminal or restart your system.
+
+    The bitstreams for HDDL-F can be found under the `/opt/intel/openvino/bitstreams/a10_vision_design_sg<#>_bitstreams/` directory.<br><br>To program the bitstream use the below command:<br>
+    ```
+    aocl program acl0 /opt/intel/openvino/bitstreams/a10_vision_design_sg<#>_bitstreams/2019R3_PV_PL1_FP11_RMNet.aocx
+    ```
+
+    For more information on programming the bitstreams, please refer the [link](https://software.intel.com/en-us/articles/OpenVINO-Install-Linux-FPGA#inpage-nav-11).
+
 
 #### Follow the steps to run the code on Jupyter:
 
@@ -193,7 +207,7 @@ __Note__: This command needs to be executed only once in the terminal where the 
 
 4. Export the environment variables in second cell of Jupyter and press **Shift+Enter**.<br>
    ```
-   %env MODEL = /opt/intel/openvino/deployment_tools/open_model_zoo/tools/downloader/Retail/object_detection/pedestrian/rmnet_ssd/0013/dldt/FP32/person-detection-retail-0013.xml
+   %env MODEL =  /opt/intel/openvino/deployment_tools/open_model_zoo/tools/downloader/intel/person-detection-retail-0013/FP32/person-detection-retail-0013.xml
    %env CPU_EXTENSION = /opt/intel/openvino/deployment_tools/inference_engine/lib/intel64/libcpu_extension_avx2.so
    %env USE_SAFETY_MODEL = ../resources/worker-safety-mobilenet/FP32/worker_safety_mobilenet.xml
    ```
@@ -226,29 +240,37 @@ __Note__: This command needs to be executed only once in the terminal where the 
      * With the floating point precision 16 (FP16), change the environment variables as given below:<br>
        ```
        %env DEVICE = GPU
-       %env MODEL=/opt/intel/openvino/deployment_tools/open_model_zoo/tools/downloader/Retail/object_detection/pedestrian/rmnet_ssd/0013/dldt/FP16/person-detection-retail-0013.xml
+       %env MODEL=/opt/intel/openvino/deployment_tools/open_model_zoo/tools/downloader/intel/person-detection-retail-0013/FP32/person-detection-retail-0013.xml
        %env USE_SAFETY_MODEL = ../resources/worker-safety-mobilenet/FP16/worker_safety_mobilenet.xml
        ```
      * **CPU_EXTENSION** environment variable is not required.<br>
      **FP16:** FP16 is half-precision floating-point arithmetic uses 16 bits. 5 bits for the magnitude and 10 bits for the precision. For more information, [click here](https://en.wikipedia.org/wiki/Half-precision_floating-point_format)
-<!--
-2. To run the application on ```Intel® Neural Compute Stick```:
+
+2. To run the application on **Intel® Neural Compute Stick**:
       * Change the **%env DEVICE = CPU** to **%env DEVICE = MYRIAD**.
-      * The Intel® Neural Compute Stick can only run FP16 models. Hence change the environment variable for the model as shown below.<br> 
-      **%env MODEL=/opt/intel/openvino/deployment_tools/open_model_zoo/tools/downloader/Retail/object_detection/pedestrian/rmnet_ssd/0013/dldt/FP16/person-detection-retail-0013.xml** <br>
+      **%env MODEL=/opt/intel/openvino/deployment_tools/open_model_zoo/tools/downloader/intel/person-detection-retail-0013/FP16/person-detection-retail-0013.xml** <br>
       **%env USE_SAFETY_MODEL = ../resources/worker-safety-mobilenet/FP16/worker_safety_mobilenet.xml**<br>
       * **CPU_EXTENSION** environment variable is not required.
--->
-3. To run the application on ```Intel® Movidius™ VPU```:
+
+3. To run the application on **Intel® Movidius™ VPU**:
     - Change the **%env DEVICE = CPU** to **%env DEVICE = HDDL**.
     - The HDDL can only run FP16 models. Change the environment variable for the model as shown below  and the model that is passed to the application must be of data type FP16. <br>
-    **%env MODEL=/opt/intel/openvino/deployment_tools/open_model_zoo/tools/downloader/Retail/object_detection/pedestrian/rmnet_ssd/0013/dldt/FP16/person-detection-retail-0013.xml** <br>
+    **%env MODEL=/opt/intel/openvino/deployment_tools/open_model_zoo/tools/downloader/intel/person-detection-retail-0013/FP16/person-detection-retail-0013.xml** <br>
     **%env USE_SAFETY_MODEL = ../resources/worker-safety-mobilenet/FP16/worker_safety_mobilenet.xml**<br>
     - **CPU_EXTENSION** environment variable is not required.
+
+4. To run the application on **Intel® Arria® 10 FPGA**:
+
+    - Change the **%env DEVICE = CPU** to **%env DEVICE = HETERO:FPGA,CPU**.
+    - With the floating point precision 16 (FP16), change the path of the model in the environment variable MODEL as given below:<br>
+        **%env MODEL=/opt/intel/openvino/deployment_tools/open_model_zoo/tools/downloader/intel/person-detection-retail-0013/FP16/person-detection-retail-0013.xml** <br>
+        **%env USE_SAFETY_MODEL = ../resources/worker-safety-mobilenet/FP16/worker_safety_mobilenet.xml**<br>
+    - **%env CPU_EXTENSION=/opt/intel/openvino/deployment_tools/inference_engine/lib/intel64/libcpu_extension_avx2.so**
+
 4. To run the application on multiple devices:
-    - Change the **%env DEVICE = CPU** to **%env DEVICE = MULTI:CPU,GPU**
+    - Change the **%env DEVICE = CPU** to **%env DEVICE = MULTI:CPU,GPU,MYRIAD**
     - With the floating point precision 16 (FP16), change the path of the model in the environment variable MODEL as given below: 
-    **%env MODEL=/opt/intel/openvino/deployment_tools/open_model_zoo/tools/downloader/Retail/object_detection/pedestrian/rmnet_ssd/0013/dldt/FP16/person-detection-retail-0013.xml** <br>
+    **%env MODEL=/opt/intel/openvino/deployment_tools/open_model_zoo/tools/downloader/intel/person-detection-retail-0013/FP32/person-detection-retail-0013.xml** <br>
     **%env USE_SAFETY_MODEL = ../resources/worker-safety-mobilenet/FP16/worker_safety_mobilenet.xml**<br>
     - **%env CPU_EXTENSION=/opt/intel/openvino/deployment_tools/inference_engine/lib/intel64/libcpu_extension_avx2.so**<br>
 

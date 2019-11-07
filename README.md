@@ -29,7 +29,7 @@ This reference implementation is capable of detecting people passing in front of
 
 - OpenCL™ Runtime Package
 
-- Intel® Distribution of OpenVINO™ toolkit 2019 R2 Release
+- Intel® Distribution of OpenVINO™ toolkit 2019 R3 Release
 
 ## How It Works
 The application uses the Inference Engine included in the Intel® Distribution of OpenVINO™ toolkit.
@@ -66,7 +66,7 @@ Install the OpenCL™ Runtime Package to run inference on the GPU, as shown in t
 
 ## Which model to use
 
-This application uses the [person-detection-retail-0013](https://docs.openvinotoolkit.org/2019_R2/_intel_models_person_detection_retail_0013_description_person_detection_retail_0013.html) Intel® model, that can be downloaded using the **model downloader**. The **model downloader** downloads the __.xml__ and __.bin__ files that will be used by the application.
+This application uses the [person-detection-retail-0013](https://docs.openvinotoolkit.org/2019_R3/_models_intel_person_detection_retail_0013_description_person_detection_retail_0013.html) Intel® model, that can be downloaded using the **model downloader**. The **model downloader** downloads the __.xml__ and __.bin__ files that will be used by the application.
 
 The application also uses the **worker_safety_mobilenet** model, whose Caffe* model file are provided in the `resources/worker-safety-mobilenet` directory. These need to be passed through the model optimizer to generate the IR (the .xml and .bin files) that will be used by the application.
 
@@ -157,17 +157,17 @@ To see a list of the various options:
 ./safety_gear_detector.py -h
 ```
 A user can specify what target device to run on by using the device command-line argument `-d`. If no target device is specified the application will run on the CPU by default.
-To run with multiple devices use _-d MULTI:device1,device2_. For example: _-d MULTI:CPU,GPU_
+To run with multiple devices use _-d MULTI:device1,device2_. For example: _-d MULTI:CPU,GPU,MYRIAD_
 
 ### Run on the CPU
 
 To run the application using **worker_safety_mobilenet** model, use the `-sm` flag followed by the path to the worker_safety_mobilenet.xml file, as follows:
 ```
-./safety_gear_detector.py -d CPU -m /opt/intel/openvino/deployment_tools/open_model_zoo/tools/downloader/Retail/object_detection/pedestrian/rmnet_ssd/0013/dldt/FP32/person-detection-retail-0013.xml -sm ../resources/worker-safety-mobilenet/FP32/worker_safety_mobilenet.xml -e /opt/intel/openvino/deployment_tools/inference_engine/lib/intel64/libcpu_extension_avx2.so
+./safety_gear_detector.py -d CPU -m /opt/intel/openvino/deployment_tools/open_model_zoo/tools/downloader/intel/person-detection-retail-0013/FP32/person-detection-retail-0013.xml -sm ../resources/worker-safety-mobilenet/FP32/worker_safety_mobilenet.xml -e /opt/intel/openvino/deployment_tools/inference_engine/lib/intel64/libcpu_extension_avx2.so
 ```
 If the worker_safety_mobilenet model is not provided as command-line argument, the application uses OpenCV to detect safety jacket and hard-hat. To run the application without using worker_safety_mobilenet model:
 ```
-./safety_gear_detector.py -d CPU -m /opt/intel/openvino/deployment_tools/open_model_zoo/tools/downloader/Retail/object_detection/pedestrian/rmnet_ssd/0013/dldt/FP32/person-detection-retail-0013.xml -e /opt/intel/openvino/deployment_tools/inference_engine/lib/intel64/libcpu_extension_avx2.so
+./safety_gear_detector.py -d CPU -m /opt/intel/openvino/deployment_tools/open_model_zoo/tools/downloader/intel/person-detection-retail-0013/FP32/person-detection-retail-0013.xml -e /opt/intel/openvino/deployment_tools/inference_engine/lib/intel64/libcpu_extension_avx2.so
 ```
 **Note:** By default, the application runs on async mode. To run the application on sync mode, use ```-f sync``` as command-line argument.
 
@@ -177,50 +177,61 @@ If the worker_safety_mobilenet model is not provided as command-line argument, t
     **FP32:** FP32 is single-precision floating-point arithmetic uses 32 bits to represent numbers. 8 bits for the magnitude and 23 bits for the precision. For more information, [click here](https://en.wikipedia.org/wiki/Single-precision_floating-point_format)
     
     ```
-    ./safety_gear_detector.py -d GPU -m /opt/intel/openvino/deployment_tools/open_model_zoo/tools/downloader/Retail/object_detection/pedestrian/rmnet_ssd/0013/dldt/FP32/person-detection-retail-0013.xml -sm ../resources/worker-safety-mobilenet/FP32/worker_safety_mobilenet.xml
+    ./safety_gear_detector.py -d GPU -m /opt/intel/openvino/deployment_tools/open_model_zoo/tools/downloader/intel/person-detection-retail-0013/FP32/person-detection-retail-0013.xml -sm ../resources/worker-safety-mobilenet/FP32/worker_safety_mobilenet.xml
     ```
 * To run on the integrated Intel® GPU with floating point precision 16 (FP16):
 
     **FP16:** FP16 is half-precision floating-point arithmetic uses 16 bits. 5 bits for the magnitude and 10 bits for the precision. For more information, [click here](https://en.wikipedia.org/wiki/Half-precision_floating-point_format)
     
     ```
-    ./safety_gear_detector.py -d GPU -m /opt/intel/openvino/deployment_tools/open_model_zoo/tools/downloader/Retail/object_detection/pedestrian/rmnet_ssd/0013/dldt/FP16/person-detection-retail-0013.xml -sm ../resources/worker-safety-mobilenet/FP16/worker_safety_mobilenet.xml
+    ./safety_gear_detector.py -d GPU -m /opt/intel/openvino/deployment_tools/open_model_zoo/tools/downloader/intel/person-detection-retail-0013/FP16/person-detection-retail-0013.xml -sm ../resources/worker-safety-mobilenet/FP16/worker_safety_mobilenet.xml
     ```
-<!--
 ### Run on the Intel® Neural Compute Stick
 To run on the Intel® Neural Compute Stick, use the `-d MYRIAD` command-line argument:
 ```
-./safety_gear_detector.py -d MYRIAD -m /opt/intel/openvino/deployment_tools/open_model_zoo/tools/downloader/Retail/object_detection/pedestrian/rmnet_ssd/0013/dldt/FP16/person-detection-retail-0013.xml -sm ../resources/worker-safety-mobilenet/FP16/worker_safety_mobilenet.xml
+./safety_gear_detector.py -d MYRIAD -m /opt/intel/openvino/deployment_tools/open_model_zoo/tools/downloader/intel/person-detection-retail-0013/FP16/person-detection-retail-0013.xml -sm ../resources/worker-safety-mobilenet/FP16/worker_safety_mobilenet.xml
 ```
-**Note:** The Intel® Neural Compute Stick can only run FP16 models. The model that is passed to the application, through the `-m <path_to_model>` command-line argument, must be of data type FP16.   
--->
 
 ### Run on the Intel® Movidius™ VPU
 To run on the Intel® Movidius™ VPU, use the `-d HDDL` command-line argument:
 ```
-./safety_gear_detector.py -m /opt/intel/openvino/deployment_tools/open_model_zoo/tools/downloader/Retail/object_detection/pedestrian/rmnet_ssd/0013/dldt/FP16/person-detection-retail-0013.xml -sm ../resources/worker-safety-mobilenet/FP16/worker_safety_mobilenet.xml -d HDDL
+./safety_gear_detector.py -m /opt/intel/openvino/deployment_tools/open_model_zoo/tools/downloader/intel/person-detection-retail-0013/FP32/person-detection-retail-0013.xml -sm ../resources/worker-safety-mobilenet/FP16/worker_safety_mobilenet.xml -d HDDL
 ```
 **Note:** The Intel® Movidius™ VPU can only run FP16 models. The model that is passed to the application through the `-m <path_to_model>` command-line argument must be of data type FP16.
 
-<!-- ### Run on the FPGA
+### Run on the Intel® Arria® 10 FPGA
 
-Before running the application on the FPGA,  program the AOCX (bitstream) file.
-Use the setup_env.sh script from [fpga_support_files.tgz](http://registrationcenter-download.intel.com/akdlm/irc_nas/12954/fpga_support_files.tgz) to set the environment variables.<br>
-For example:
+Before running the application on the FPGA, set the environment variables and  program the AOCX (bitstream) file.<br>
+
+Set the Board Environment Variable to the proper directory:
 
 ```
-source /home/<user>/Downloads/fpga_support_files/setup_env.sh
+export AOCL_BOARD_PACKAGE_ROOT=/opt/intel/openvino/bitstreams/a10_vision_design_sg<#>_bitstreams/BSP/a10_1150_sg<#>
+```
+**NOTE**: If you do not know which version of the board you have, please refer to the product label on the fan cover side or by the product SKU: Mustang-F100-A10-R10 => SG1; Mustang-F100-A10E-R10 => SG2 <br>
+
+Set the Board Environment Variable to the proper directory:
+```
+export QUARTUS_ROOTDIR=/home/<user>/intelFPGA/18.1/qprogrammer
+```
+Set the remaining environment variables:
+```
+export PATH=$PATH:/opt/altera/aocl-pro-rte/aclrte-linux64/bin:/opt/altera/aocl-pro-rte/aclrte-linux64/host/linux64/bin:/home/<user>/intelFPGA/18.1/qprogrammer/bin
+export INTELFPGAOCLSDKROOT=/opt/altera/aocl-pro-rte/aclrte-linux64
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$AOCL_BOARD_PACKAGE_ROOT/linux64/lib
+export CL_CONTEXT_COMPILER_MODE_INTELFPGA=3
+source /opt/altera/aocl-pro-rte/aclrte-linux64/init_opencl.sh
+```
+**NOTE**: It is recommended to create your own script for your system to aid in setting up these environment variables. It will be run each time you need a new terminal or restart your system.
+
+The bitstreams for HDDL-F can be found under the `/opt/intel/openvino/bitstreams/a10_vision_design_sg<#>_bitstreams/` directory.<br><br>To program the bitstream use the below command:<br>
+```
+aocl program acl0 /opt/intel/openvino/bitstreams/a10_vision_design_sg<#>_bitstreams/2019R3_PV_PL1_FP11_RMNet.aocx
 ```
 
-The bitstreams for HDDL-F can be found under the `/opt/intel/openvino/bitstreams/a10_vision_design_bitstreams` folder.<br><br>To program the bitstream use the below command:<br>
-```
-aocl program acl0 /opt/intel/openvino/bitstreams/a10_vision_design_bitstreams/2019R1_PL1_FP11_RMNet.aocx
-```
+For more information on programming the bitstreams, please refer the [link](https://software.intel.com/en-us/articles/OpenVINO-Install-Linux-FPGA#inpage-nav-11).
 
-For more information on programming the bitstreams, please refer to https://software.intel.com/en-us/articles/OpenVINO-Install-Linux-FPGA#inpage-nav-11
-
-To run the application on the FPGA with floating point precision 16 (FP16) use the `-d HETERO:FPGA,CPU` command-line argument:
+To run the application on the FPGA with floating point precision 16 (FP16), use  `-d HETERO:FPGA,CPU` command-line argument:
 ```
-./safety_gear_detector.py -m /opt/intel/openvino/deployment_tools/open_model_zoo/tools/downloader/Retail/object_detection/pedestrian/rmnet_ssd/0013/dldt/FP16/person-detection-retail-0013.xml -sm resources/worker-safety-mobilenet/FP16/worker_safety_mobilenet.xml -d HETERO:FPGA,CPU -e /opt/intel/openvino/deployment_tools/inference_engine/lib/intel64/libcpu_extension_avx2.so
+./safety_gear_detector.py -m /opt/intel/openvino/deployment_tools/open_model_zoo/tools/downloader/intel/person-detection-retail-0013/FP32/person-detection-retail-0013.xml -sm ../resources/worker-safety-mobilenet/FP16/worker_safety_mobilenet.xml -e /opt/intel/openvino/deployment_tools/inference_engine/lib/intel64/libcpu_extension_avx2.so -d HETERO:FPGA,CPU
 ```
- -->
