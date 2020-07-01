@@ -70,7 +70,7 @@ class Network:
 
         # Read IR
         log.info("Reading IR...")
-        self.net = IENetwork(model=model_xml, weights=model_bin)
+        self.net =  self.plugin.read_network(model=model_xml, weights=model_bin) #IENetwork(model=model_xml, weights=model_bin)
         log.info("Loading IR to the plugin...")
 
         if "CPU" in device:
@@ -82,9 +82,9 @@ class Network:
                           "the plugin for specified device {}:\n {}".
                           format(device,
                                  ', '.join(not_supported_layers)))
-                log.error("Please try to specify cpu extensions library path"
-                          " in command line parameters using -l "
-                          "or --cpu_extension command line argument")
+#               log.error("Please try to specify cpu extensions library path"
+#                          " in command line parameters using -l "
+#                          "or --cpu_extension command line argument")
                 sys.exit(1)
 
         if num_requests == 0:

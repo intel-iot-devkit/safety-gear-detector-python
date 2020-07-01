@@ -2,7 +2,7 @@
 
 | Details           |              |
 |-----------------------|---------------|
-| Target OS:            |  Ubuntu\* 16.04 LTS   |
+| Target OS:            |  Ubuntu\* 18.04 LTS   |
 | Programming Language: |  Python\* 3.5|
 | Time to Complete:    |  30-40min     |
 
@@ -20,7 +20,7 @@ This reference implementation is capable of detecting people passing in front of
 
 ### Software
 
-- [Ubuntu\* 16.04 LTS](http://releases.ubuntu.com/16.04/) <br>
+- [Ubuntu\* 18.04 LTS](http://releases.ubuntu.com/18.04/) <br>
   **Note**: We recommend using a 4.14+ Linux* kernel with this software. Run the following command to determine the kernel version:
 
     ```
@@ -29,7 +29,7 @@ This reference implementation is capable of detecting people passing in front of
 
 - OpenCL™ Runtime Package
 
-- Intel® Distribution of OpenVINO™ toolkit 2019 R3 Release
+- Intel® Distribution of OpenVINO™ toolkit 2020 R3 Release
 
 ## How It Works
 The application uses the Inference Engine included in the Intel® Distribution of OpenVINO™ toolkit.
@@ -73,7 +73,7 @@ FFmpeg is a free and open-source project capable of recording, converting and st
 
 ## Which model to use
 
-This application uses the [person-detection-retail-0013](https://docs.openvinotoolkit.org/2019_R3/_models_intel_person_detection_retail_0013_description_person_detection_retail_0013.html) Intel® model, that can be downloaded using the **model downloader**. The **model downloader** downloads the __.xml__ and __.bin__ files that will be used by the application.
+This application uses the [person-detection-retail-0013](https://docs.openvinotoolkit.org/2020.3/_models_intel_person_detection_retail_0013_description_person_detection_retail_0013.html) Intel® model, that can be downloaded using the **model downloader**. The **model downloader** downloads the __.xml__ and __.bin__ files that will be used by the application.
 
 The application also uses the **worker_safety_mobilenet** model, whose Caffe* model file are provided in the `resources/worker-safety-mobilenet` directory. These need to be passed through the model optimizer to generate the IR (the .xml and .bin files) that will be used by the application.
 
@@ -159,6 +159,7 @@ __Note__: This command needs to be executed only once in the terminal where the 
     cd <path_to_the_safety-gear-detector-cpp-with-worker-safety-model_directory>/Jupyter
     ```
 
+<!--
 * Open the jupyter notebook:
 
     ```
@@ -193,7 +194,7 @@ __Note__: This command needs to be executed only once in the terminal where the 
     ```
 
     For more information on programming the bitstreams, please refer the [link](https://software.intel.com/en-us/articles/OpenVINO-Install-Linux-FPGA#inpage-nav-11).
-
+-->
 
 #### Follow the steps to run the code on Jupyter:
 
@@ -208,7 +209,6 @@ __Note__: This command needs to be executed only once in the terminal where the 
 4. Export the environment variables in second cell of Jupyter and press **Shift+Enter**.<br>
    ```
    %env MODEL =  /opt/intel/openvino/deployment_tools/open_model_zoo/tools/downloader/intel/person-detection-retail-0013/FP32/person-detection-retail-0013.xml
-   %env CPU_EXTENSION = /opt/intel/openvino/deployment_tools/inference_engine/lib/intel64/libcpu_extension_avx2.so
    %env USE_SAFETY_MODEL = ../resources/worker-safety-mobilenet/FP32/worker_safety_mobilenet.xml
    ```
     
@@ -243,36 +243,32 @@ __Note__: This command needs to be executed only once in the terminal where the 
        %env MODEL=/opt/intel/openvino/deployment_tools/open_model_zoo/tools/downloader/intel/person-detection-retail-0013/FP32/person-detection-retail-0013.xml
        %env USE_SAFETY_MODEL = ../resources/worker-safety-mobilenet/FP16/worker_safety_mobilenet.xml
        ```
-     * **CPU_EXTENSION** environment variable is not required.<br>
      **FP16:** FP16 is half-precision floating-point arithmetic uses 16 bits. 5 bits for the magnitude and 10 bits for the precision. For more information, [click here](https://en.wikipedia.org/wiki/Half-precision_floating-point_format)
 
 2. To run the application on **Intel® Neural Compute Stick**:
       * Change the **%env DEVICE = CPU** to **%env DEVICE = MYRIAD**.
       **%env MODEL=/opt/intel/openvino/deployment_tools/open_model_zoo/tools/downloader/intel/person-detection-retail-0013/FP16/person-detection-retail-0013.xml** <br>
       **%env USE_SAFETY_MODEL = ../resources/worker-safety-mobilenet/FP16/worker_safety_mobilenet.xml**<br>
-      * **CPU_EXTENSION** environment variable is not required.
 
 3. To run the application on **Intel® Movidius™ VPU**:
     - Change the **%env DEVICE = CPU** to **%env DEVICE = HDDL**.
     - The HDDL can only run FP16 models. Change the environment variable for the model as shown below  and the model that is passed to the application must be of data type FP16. <br>
     **%env MODEL=/opt/intel/openvino/deployment_tools/open_model_zoo/tools/downloader/intel/person-detection-retail-0013/FP16/person-detection-retail-0013.xml** <br>
     **%env USE_SAFETY_MODEL = ../resources/worker-safety-mobilenet/FP16/worker_safety_mobilenet.xml**<br>
-    - **CPU_EXTENSION** environment variable is not required.
 
+<!--
 4. To run the application on **Intel® Arria® 10 FPGA**:
 
     - Change the **%env DEVICE = CPU** to **%env DEVICE = HETERO:FPGA,CPU**.
     - With the floating point precision 16 (FP16), change the path of the model in the environment variable MODEL as given below:<br>
         **%env MODEL=/opt/intel/openvino/deployment_tools/open_model_zoo/tools/downloader/intel/person-detection-retail-0013/FP16/person-detection-retail-0013.xml** <br>
         **%env USE_SAFETY_MODEL = ../resources/worker-safety-mobilenet/FP16/worker_safety_mobilenet.xml**<br>
-    - **%env CPU_EXTENSION=/opt/intel/openvino/deployment_tools/inference_engine/lib/intel64/libcpu_extension_avx2.so**
-
+-->
 4. To run the application on multiple devices:
     - Change the **%env DEVICE = CPU** to **%env DEVICE = MULTI:CPU,GPU,MYRIAD**
     - With the floating point precision 16 (FP16), change the path of the model in the environment variable MODEL as given below: 
     **%env MODEL=/opt/intel/openvino/deployment_tools/open_model_zoo/tools/downloader/intel/person-detection-retail-0013/FP32/person-detection-retail-0013.xml** <br>
     **%env USE_SAFETY_MODEL = ../resources/worker-safety-mobilenet/FP16/worker_safety_mobilenet.xml**<br>
-    - **%env CPU_EXTENSION=/opt/intel/openvino/deployment_tools/inference_engine/lib/intel64/libcpu_extension_avx2.so**<br>
 
 
 <!-- 4. To run the application on **FPGA**:
@@ -280,5 +276,4 @@ __Note__: This command needs to be executed only once in the terminal where the 
     - With the floating point precision 16 (FP16), change the path of the model in the environment variable MODEL as given below:<br>
     **%env MODEL=/opt/intel/openvino/deployment_tools/open_model_zoo/tools/downloader/Retail/object_detection/pedestrian/rmnet_ssd/0013/dldt/FP16/person-detection-retail-0013.xml** <br>
     **%env USE_SAFETY_MODEL = ../resources/worker-safety-mobilenet/FP16/worker_safety_mobilenet.xml**<br>
-   - **%env CPU_EXTENSION=/opt/intel/openvino/deployment_tools/inference_engine/lib/intel64/libcpu_extension_avx2.so<br>**
  -->
