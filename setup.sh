@@ -28,11 +28,11 @@ sudo apt-get install python3-pip
 sudo pip3 install numpy jupyter
 
 #Download the person detection model
-cd /opt/intel/openvino/deployment_tools/tools/model_downloader
+cd /opt/intel/openvino_2021/deployment_tools/tools/model_downloader
 sudo ./downloader.py --name person-detection-retail-0013
 
 #Optimize the worker-safety-mobilenet model
-cd /opt/intel/openvino/deployment_tools/model_optimizer/
+cd /opt/intel/openvino_2021/deployment_tools/model_optimizer/
 ./mo_caffe.py --input_model $BASE_DIR/resources/worker-safety-mobilenet/worker_safety_mobilenet.caffemodel  -o $BASE_DIR/resources/worker-safety-mobilenet/FP32 --data_type FP32
 ./mo_caffe.py --input_model $BASE_DIR/resources/worker-safety-mobilenet/worker_safety_mobilenet.caffemodel  -o $BASE_DIR/resources/worker-safety-mobilenet/FP16 --data_type FP16
 

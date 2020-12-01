@@ -73,20 +73,6 @@ class Network:
         self.net =  self.plugin.read_network(model=model_xml, weights=model_bin) #IENetwork(model=model_xml, weights=model_bin)
         log.info("Loading IR to the plugin...")
 
-        if "CPU" in device:
-            supported_layers = self.plugin.query_network(self.net, "CPU")
-            not_supported_layers = \
-                [l for l in self.net.layers.keys() if l not in supported_layers]
-            if len(not_supported_layers) != 0:
-                log.error("Following layers are not supported by "
-                          "the plugin for specified device {}:\n {}".
-                          format(device,
-                                 ', '.join(not_supported_layers)))
-#               log.error("Please try to specify cpu extensions library path"
-#                          " in command line parameters using -l "
-#                          "or --cpu_extension command line argument")
-                sys.exit(1)
-
         if num_requests == 0:
             # Loads network read from IR to the plugin
             self.net_plugin = self.plugin.load_network(network=self.net, device_name=device)
@@ -94,10 +80,10 @@ class Network:
             self.net_plugin = self.plugin.load_network(network=self.net, num_requests=num_requests, device_name=device)
             # log.error("num_requests != 0")
 
-        self.input_blob = next(iter(self.net.inputs))
+        self.input_blob = next(iter(self.net.input_info))
         self.out_blob = next(iter(self.net.outputs))
-        assert len(self.net.inputs.keys()) == input_size, \
-            "Supports only {} input topologies".format(len(self.net.inputs))
+        assert len(self.net.input_info.keys()) == input_size, \
+            "Supports only {} input topologies".format(len(self.net.input_info))
         assert len(self.net.outputs) == output_size, \
             "Supports only {} output topologies".format(len(self.net.outputs))
 
@@ -108,7 +94,7 @@ class Network:
         Gives the shape of the input layer of the network.
         :return: None
         """
-        return self.net.inputs[self.input_blob].shape
+        return self.net.input_info[self.input_blob].input_data.shape
 
     def performance_counter(self, request_id):
         """
@@ -148,9 +134,9 @@ class Network:
         :return: Results for the specified request
         """
         if output:
-            res = self.infer_request_handle.outputs[output]
+            res = self.infer_request_handle.output_blobs
         else:
-            res = self.net_plugin.requests[request_id].outputs[self.out_blob]
+            res = self.net_plugin.requests[request_id].output_blobs[self.out_blob].buffer
         return res
 
     def clean(self):

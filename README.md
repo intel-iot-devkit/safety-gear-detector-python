@@ -29,7 +29,7 @@ This reference implementation is capable of detecting people passing in front of
 
 - OpenCL™ Runtime Package
 
-- Intel® Distribution of OpenVINO™ toolkit 2020 R3 Release
+- Intel® Distribution of OpenVINO™ toolkit 2021 R1 Release
 
 ## How It Works
 The application uses the Inference Engine included in the Intel® Distribution of OpenVINO™ toolkit.
@@ -66,7 +66,7 @@ Install the OpenCL™ Runtime Package to run inference on the GPU, as shown in t
 
 ## Which model to use
 
-This application uses the [person-detection-retail-0013](https://docs.openvinotoolkit.org/2020.3/_models_intel_person_detection_retail_0013_description_person_detection_retail_0013.html) Intel® model, that can be downloaded using the **model downloader**. The **model downloader** downloads the __.xml__ and __.bin__ files that will be used by the application.
+This application uses the [person-detection-retail-0013](https://docs.openvinotoolkit.org/2021.1/omz_models_intel_person_detection_retail_0013_description_person_detection_retail_0013.html) Intel® model, that can be downloaded using the **model downloader**. The **model downloader** downloads the __.xml__ and __.bin__ files that will be used by the application.
 
 The application also uses the **worker_safety_mobilenet** model, whose Caffe* model file are provided in the `resources/worker-safety-mobilenet` directory. These need to be passed through the model optimizer to generate the IR (the .xml and .bin files) that will be used by the application.
 
@@ -140,7 +140,7 @@ For example, if the output of above command is __/dev/video0__, then config.json
 Configure the environment to use the Intel® Distribution of OpenVINO™ toolkit by exporting environment variables:
 
 ```
-source /opt/intel/openvino/bin/setupvars.sh
+source /opt/intel/openvino_2021/bin/setupvars.sh
 ```
 
 __Note__: This command needs to be executed only once in the terminal where the application will be executed. If the terminal is closed, the command needs to be executed again.
@@ -163,11 +163,11 @@ To run with multiple devices use _-d MULTI:device1,device2_. For example: _-d MU
 
 To run the application using **worker_safety_mobilenet** model, use the `-sm` flag followed by the path to the worker_safety_mobilenet.xml file, as follows:
 ```
-./safety_gear_detector.py -d CPU -m /opt/intel/openvino/deployment_tools/open_model_zoo/tools/downloader/intel/person-detection-retail-0013/FP32/person-detection-retail-0013.xml -sm ../resources/worker-safety-mobilenet/FP32/worker_safety_mobilenet.xml
+./safety_gear_detector.py -d CPU -m /opt/intel/openvino_2021/deployment_tools/open_model_zoo/tools/downloader/intel/person-detection-retail-0013/FP32/person-detection-retail-0013.xml -sm ../resources/worker-safety-mobilenet/FP32/worker_safety_mobilenet.xml
 ```
 If the worker_safety_mobilenet model is not provided as command-line argument, the application uses OpenCV to detect safety jacket and hard-hat. To run the application without using worker_safety_mobilenet model:
 ```
-./safety_gear_detector.py -d CPU -m /opt/intel/openvino/deployment_tools/open_model_zoo/tools/downloader/intel/person-detection-retail-0013/FP32/person-detection-retail-0013.xml
+./safety_gear_detector.py -d CPU -m /opt/intel/openvino_2021/deployment_tools/open_model_zoo/tools/downloader/intel/person-detection-retail-0013/FP32/person-detection-retail-0013.xml
 ```
 **Note:** By default, the application runs on async mode. To run the application on sync mode, use ```-f sync``` as command-line argument.
 
@@ -177,25 +177,25 @@ If the worker_safety_mobilenet model is not provided as command-line argument, t
     **FP32:** FP32 is single-precision floating-point arithmetic uses 32 bits to represent numbers. 8 bits for the magnitude and 23 bits for the precision. For more information, [click here](https://en.wikipedia.org/wiki/Single-precision_floating-point_format)
     
     ```
-    ./safety_gear_detector.py -d GPU -m /opt/intel/openvino/deployment_tools/open_model_zoo/tools/downloader/intel/person-detection-retail-0013/FP32/person-detection-retail-0013.xml -sm ../resources/worker-safety-mobilenet/FP32/worker_safety_mobilenet.xml
+    ./safety_gear_detector.py -d GPU -m /opt/intel/openvino_2021/deployment_tools/open_model_zoo/tools/downloader/intel/person-detection-retail-0013/FP32/person-detection-retail-0013.xml -sm ../resources/worker-safety-mobilenet/FP32/worker_safety_mobilenet.xml
     ```
 * To run on the integrated Intel® GPU with floating point precision 16 (FP16):
 
     **FP16:** FP16 is half-precision floating-point arithmetic uses 16 bits. 5 bits for the magnitude and 10 bits for the precision. For more information, [click here](https://en.wikipedia.org/wiki/Half-precision_floating-point_format)
     
     ```
-    ./safety_gear_detector.py -d GPU -m /opt/intel/openvino/deployment_tools/open_model_zoo/tools/downloader/intel/person-detection-retail-0013/FP16/person-detection-retail-0013.xml -sm ../resources/worker-safety-mobilenet/FP16/worker_safety_mobilenet.xml
+    ./safety_gear_detector.py -d GPU -m /opt/intel/openvino_2021/deployment_tools/open_model_zoo/tools/downloader/intel/person-detection-retail-0013/FP16/person-detection-retail-0013.xml -sm ../resources/worker-safety-mobilenet/FP16/worker_safety_mobilenet.xml
     ```
 ### Run on the Intel® Neural Compute Stick
 To run on the Intel® Neural Compute Stick, use the `-d MYRIAD` command-line argument:
 ```
-./safety_gear_detector.py -d MYRIAD -m /opt/intel/openvino/deployment_tools/open_model_zoo/tools/downloader/intel/person-detection-retail-0013/FP16/person-detection-retail-0013.xml -sm ../resources/worker-safety-mobilenet/FP16/worker_safety_mobilenet.xml
+./safety_gear_detector.py -d MYRIAD -m /opt/intel/openvino_2021/deployment_tools/open_model_zoo/tools/downloader/intel/person-detection-retail-0013/FP16/person-detection-retail-0013.xml -sm ../resources/worker-safety-mobilenet/FP16/worker_safety_mobilenet.xml
 ```
 
 ### Run on the Intel® Movidius™ VPU
 To run on the Intel® Movidius™ VPU, use the `-d HDDL` command-line argument:
 ```
-./safety_gear_detector.py -m /opt/intel/openvino/deployment_tools/open_model_zoo/tools/downloader/intel/person-detection-retail-0013/FP32/person-detection-retail-0013.xml -sm ../resources/worker-safety-mobilenet/FP16/worker_safety_mobilenet.xml -d HDDL
+./safety_gear_detector.py -m /opt/intel/openvino_2021/deployment_tools/open_model_zoo/tools/downloader/intel/person-detection-retail-0013/FP16/person-detection-retail-0013.xml -sm ../resources/worker-safety-mobilenet/FP16/worker_safety_mobilenet.xml -d HDDL
 ```
 **Note:** The Intel® Movidius™ VPU can only run FP16 models. The model that is passed to the application through the `-m <path_to_model>` command-line argument must be of data type FP16.
 
