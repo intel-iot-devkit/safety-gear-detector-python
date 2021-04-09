@@ -46,7 +46,7 @@ Refer to [Install the Intel® Distribution of OpenVINO™ toolkit for Linux*](ht
 Install the OpenCL™ Runtime Package to run inference on the GPU. It is not mandatory for CPU inference.
 
 ### Other dependencies
-#### FFmpeg* 
+#### FFmpeg*
 FFmpeg is a free and open-source project capable of recording, converting and streaming digital audio and video in various formats. It can be used to do most of our multimedia tasks quickly and easily say, audio compression, audio/video format conversion, extract images from a video and a lot more.
 
 ## Setup
@@ -84,7 +84,7 @@ For example:
    {
        "inputs": [
           {
-              "video":"path_to_video/video1.mp4",
+              "video":"path_to_video/video1.webm",
           }
        ]
    }
@@ -96,17 +96,17 @@ The `path/to/video` is the path to an input video file.
 
 The application works with any input video. Sample videos are provided [here](https://github.com/intel-iot-devkit/sample-videos/).
 
-For first-use, we recommend using the *Safety_Full_Hat_and_Vest.mp4* video which is present in the `resources/` directory.
+For first-use, we recommend using the *Safety_Full_Hat_and_Vest.webm* video which is present in the `resources/` directory.
 
 For example:
    ```
    {
        "inputs": [
           {
-              "video":"sample-videos/Safety_Full_Hat_and_Vest.mp4"
+              "video":"sample-videos/Safety_Full_Hat_and_Vest.webm"
           },
           {
-              "video":"sample-videos/Safety_Full_Hat_and_Vest.mp4"
+              "video":"sample-videos/Safety_Full_Hat_and_Vest.webm"
           }
        ]
    }
@@ -175,14 +175,14 @@ If the worker_safety_mobilenet model is not provided as command-line argument, t
 * To run on the integrated Intel GPU with floating point precision 32 (FP32), use the `-d GPU` command-line argument:
 
     **FP32:** FP32 is single-precision floating-point arithmetic uses 32 bits to represent numbers. 8 bits for the magnitude and 23 bits for the precision. For more information, [click here](https://en.wikipedia.org/wiki/Single-precision_floating-point_format)
-    
+
     ```
     ./safety_gear_detector.py -d GPU -m /opt/intel/openvino/deployment_tools/open_model_zoo/tools/downloader/intel/person-detection-retail-0013/FP32/person-detection-retail-0013.xml -sm ../resources/worker-safety-mobilenet/FP32/worker_safety_mobilenet.xml
     ```
 * To run on the integrated Intel® GPU with floating point precision 16 (FP16):
 
     **FP16:** FP16 is half-precision floating-point arithmetic uses 16 bits. 5 bits for the magnitude and 10 bits for the precision. For more information, [click here](https://en.wikipedia.org/wiki/Half-precision_floating-point_format)
-    
+
     ```
     ./safety_gear_detector.py -d GPU -m /opt/intel/openvino/deployment_tools/open_model_zoo/tools/downloader/intel/person-detection-retail-0013/FP16/person-detection-retail-0013.xml -sm ../resources/worker-safety-mobilenet/FP16/worker_safety_mobilenet.xml
     ```
